@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>بوابة الطالب الإلكترونية | جامعة الزعيم الأزهري</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { cairo: ['Cairo', 'sans-serif'] },
+                    colors: { primary: '#0047B3', success: '#0A8F3D', darkBg: '#F8FAFC' }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="font-cairo bg-darkBg text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+
+    <!-- شاشة تسجيل الدخول -->
+    <div id="loginSection" class="flex-grow flex items-center justify-center p-4">
+        <div class="bg-white p-8 rounded-2xl shadow-sm border border-slate-100 w-full max-w-md">
+            <div class="text-center mb-6">
+                <h1 class="text-xl font-light text-primary mb-1">جامعة الزعيم الأزهري</h1>
+                <p class="text-xs text-slate-400 font-light">بوابة الطالب الإلكترونية</p>
+            </div>
+            <form id="loginForm" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-light text-slate-600 mb-1">الرقم الجامعي</label>
+                    <input type="text" id="studentId" value="2026001" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-primary font-light">
+                </div>
+                <div>
+                    <label class="block text-xs font-light text-slate-600 mb-1">كلمة المرور</label>
+                    <input type="password" id="password" value="123456" required class="w-full px-4 py-2.5 text-sm rounded-xl border border-slate-200 focus:outline-none focus:border-primary font-light">
+                </div>
+                <button type="submit" id="loginBtn" class="w-full py-3 bg-primary text-white text-sm rounded-xl font-light hover:bg-blue-700 transition shadow-sm">
+                    تسجيل الدخول
+                </button>
+                <p id="loginError" class="text-xs text-red-500 text-center mt-2 hidden"></p>
+            </form>
+        </div>
+    </div>
+
+    <!-- لوحة التحكم الرئيسية -->
+    <div id="dashboardSection" class="hidden flex-grow pb-24">
+        <header class="bg-white border-b border-slate-100 py-4 px-6 sticky top-0 z-10 flex justify-between items-center">
+            <div>
+                <h2 id="studentNameDisplay" class="text-sm font-semibold text-slate-800">أهلاً بك</h2>
+                <p id="studentFacultyDisplay" class="text-xs text-slate-400 font-light">كلية علوم الحاسوب وتقانة المعلومات</p>
+            </div>
+            <button onclick="logout()" class="text-xs text-red-500 font-light border border-red-100 px-3 py-1.5 rounded-lg hover:bg-red-50">خروج</button>
+        </header>
+
+        <main class="max-w-md mx-auto p-4 space-y-4">
+            <!-- الرئيسية -->
+            <div id="view-home" class="space-y-4 tab-content">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm flex items-center justify-between">
+                    <div>
+                        <span class="text-xs text-slate-400 font-light">المعدل التراكمي (GPA)</span>
+                        <h3 id="gpaDisplay" class="text-2xl font-light text-primary mt-1">3.85 <span class="text-xs text-success font-normal">ممتاز</span></h3>
+                    </div>
+                    <div class="w-10 h-10 rounded-full bg-blue-50 flex items-center justify-center text-primary font-light text-sm">GPA</div>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-xs font-semibold text-slate-700">الوضع المالي للرسوم</span>
+                        <span class="text-xs text-success bg-green-50 px-2 py-0.5 rounded-md font-light">منتظم</span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-light bg-slate-50 p-3 rounded-xl">
+                        <div>
+                            <span class="text-slate-400 block">المطلوب</span>
+                            <span class="text-slate-700 font-semibold">25,000 ج.س</span>
+                        </div>
+                        <div>
+                            <span class="text-slate-400 block">المسدد</span>
+                            <span class="text-success font-semibold">10,000 ج.س</span>
+                        </div>
+                    </div>
+                    <button onclick="openUploadModal()" class="w-full py-2 bg-slate-900 text-white text-xs rounded-xl font-light hover:bg-slate-800 transition">
+                        رفع إيصال سداد جديد
+                    </button>
+                </div>
+
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+                    <span class="text-xs font-semibold text-slate-700">الجدول الدراسي اليومي</span>
+                    <div class="space-y-2 text-xs font-light">
+                        <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-xl">
+                            <span class="text-slate-700">رياضيات متقدمة (A101)</span>
+                            <span class="text-primary">09:00 ص</span>
+                        </div>
+                        <div class="flex justify-between items-center p-2.5 bg-slate-50 rounded-xl">
+                            <span class="text-slate-700">هياكل بيانات (B203)</span>
+                            <span class="text-primary">11:00 ص</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- المقررات -->
+            <div id="view-courses" class="space-y-3 tab-content hidden">
+                <h3 class="text-xs font-semibold text-slate-700 mb-2">المقررات المسجلة لهذا الفصل</h3>
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-3">
+                    <div class="flex justify-between items-center border-b border-slate-50 pb-2.5">
+                        <div>
+                            <h4 class="text-xs font-semibold text-slate-800">هياكل البيانات والخورزميات</h4>
+                            <span class="text-[10px] text-slate-400">رمز المقرر: CS201</span>
+                        </div>
+                        <span class="text-xs text-primary bg-blue-50 px-2 py-1 rounded-lg">3 ساعات</span>
+                    </div>
+                    <div class="flex justify-between items-center border-b border-slate-50 pb-2.5">
+                        <div>
+                            <h4 class="text-xs font-semibold text-slate-800">برمجة متقدمة (2)</h4>
+                            <span class="text-[10px] text-slate-400">رمز المقرر: CS202</span>
+                        </div>
+                        <span class="text-xs text-primary bg-blue-50 px-2 py-1 rounded-lg">3 ساعات</span>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div>
+                            <h4 class="text-xs font-semibold text-slate-800">شبكات الحاسوب</h4>
+                            <span class="text-[10px] text-slate-400">رمز المقرر: IT301</span>
+                        </div>
+                        <span class="text-xs text-primary bg-blue-50 px-2 py-1 rounded-lg">2 ساعات</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- النتائج -->
+            <div id="view-results" class="space-y-3 tab-content hidden">
+                <h3 class="text-xs font-semibold text-slate-700 mb-2">سجل النتائج الأكاديمية</h3>
+                <div class="bg-white p-4 rounded-2xl border border-slate-100 shadow-sm space-y-3 text-xs font-light">
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <div>
+                            <span class="font-semibold text-slate-800 block">البرمجة الكائنية</span>
+                            <span class="text-[10px] text-slate-400">الفصل الدراسي الأول</span>
+                        </div>
+                        <span class="text-success font-bold text-sm">92 (A)</span>
+                    </div>
+                    <div class="flex justify-between items-center p-3 bg-slate-50 rounded-xl">
+                        <div>
+                            <span class="font-semibold text-slate-800 block">قواعد البيانات</span>
+                            <span class="text-[10px] text-slate-400">الفصل الدراسي الأول</span>
+                        </div>
+                        <span class="text-success font-bold text-sm">88 (B+)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- الملف الشخصي -->
+            <div id="view-profile" class="space-y-3 tab-content hidden">
+                <div class="bg-white p-5 rounded-2xl border border-slate-100 shadow-sm text-center space-y-3">
+                    <div class="w-16 h-16 bg-blue-50 text-primary rounded-full mx-auto flex items-center justify-center text-xl font-semibold">أح</div>
+                    <div>
+                        <h3 class="text-sm font-semibold text-slate-800">أحمد محمد أحمد</h3>
+                        <p class="text-xs text-slate-400 font-light">الرقم الجامعي: 2026001</p>
+                    </div>
+                    <div class="text-right space-y-2 pt-3 border-t border-slate-50 text-xs font-light">
+                        <div class="flex justify-between py-1"><span class="text-slate-400">الكلية:</span><span class="text-slate-700">علوم الحاسوب وتقانة المعلومات</span></div>
+                        <div class="flex justify-between py-1"><span class="text-slate-400">المستوى:</span><span class="text-slate-700">السنة الثالثة</span></div>
+                        <div class="flex justify-between py-1"><span class="text-slate-400">الحالة الدراسية:</span><span class="text-success">مستمر ومنتظم</span></div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- نافذة رفع الإيصال -->
+    <div id="uploadModal" class="hidden fixed inset-0 bg-black/40 z-50 flex items-center justify-center p-4">
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-100 w-full max-w-sm space-y-4">
+            <div class="flex justify-between items-center">
+                <h3 class="text-xs font-semibold text-slate-800">رفع إيصال سداد الرسوم</h3>
+                <button onclick="closeUploadModal()" class="text-slate-400 hover:text-slate-600">✕</button>
+            </div>
+            <div class="border-2 border-dashed border-slate-200 rounded-xl p-6 text-center space-y-2">
+                <span class="text-2xl">📄</span>
+                <p class="text-xs text-slate-500 font-light">اضغط لاختيار صورة الإيصال</p>
+                <input type="file" id="receiptFile" class="text-xs text-slate-400 w-full file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-light file:bg-blue-50 file:text-primary">
+            </div>
+            <div class="flex gap-2">
+                <button onclick="closeUploadModal()" class="w-1/2 py-2 bg-slate-100 text-slate-600 text-xs rounded-xl font-light">إلغاء</button>
+                <button onclick="submitReceipt()" class="w-1/2 py-2 bg-primary text-white text-xs rounded-xl font-light">إرسال للإدارة</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- المساعد الذكي العائم -->
+    <div class="fixed bottom-16 left-4 z-30">
+        <button onclick="toggleChat()" class="w-12 h-12 bg-primary text-white rounded-full shadow-lg flex items-center justify-center hover:bg-blue-700 transition">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
+        </button>
+        <div id="chatWindow" class="hidden absolute bottom-14 left-0 w-80 bg-white rounded-2xl shadow-xl border border-slate-100 overflow-hidden flex flex-col h-96">
+            <div class="bg-primary text-white p-3 text-xs flex justify-between items-center font-light">
+                <span>المساعد الذكي (AI Assistant)</span>
+                <button onclick="toggleChat()" class="hover:text-slate-200">✕</button>
+            </div>
+            <div id="chatMessages" class="flex-grow p-3 overflow-y-auto space-y-2 text-xs font-light bg-slate-50 flex flex-col">
+                <div class="bg-white p-2.5 rounded-xl shadow-xs max-w-[85%] text-slate-700 border border-slate-100">
+                    مرحباً بك! أنا مساعدك الذكي في جامعة الزعيم الأزهري. اسألني عن الرسوم، التسجيل، أو النتائج!
+                </div>
+            </div>
+            <div class="p-2 border-t border-slate-100 bg-white flex gap-1">
+                <input type="text" id="chatInput" onkeypress="if(event.key === 'Enter') sendChatMessage()" placeholder="اكتب سؤالك هنا..." class="flex-grow px-3 py-2 text-xs rounded-lg border border-slate-200 focus:outline-none font-light">
+                <button onclick="sendChatMessage()" class="bg-primary text-white px-3 py-2 text-xs rounded-lg font-light">إرسال</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <nav id="bottomNav" class="hidden bg-white border-t border-slate-100 fixed bottom-0 left-0 right-0 py-2.5 px-6 flex justify-around items-center z-20 shadow-sm">
+        <button onclick="switchTab('home')" id="nav-home" class="nav-btn text-primary text-xs font-light flex flex-col items-center">
+            <span class="text-base">🏠</span> الرئيسية
+        </button>
+        <button onclick="switchTab('courses')" id="nav-courses" class="nav-btn text-slate-400 text-xs font-light flex flex-col items-center hover:text-primary">
+            <span class="text-base">📚</span> المقررات
+        </button>
+        <button onclick="switchTab('results')" id="nav-results" class="nav-btn text-slate-400 text-xs font-light flex flex-col items-center hover:text-primary">
+            <span class="text-base">📊</span> النتائج
+        </button>
+        <button onclick="switchTab('profile')" id="nav-profile" class="nav-btn text-slate-400 text-xs font-light flex flex-col items-center hover:text-primary">
+            <span class="text-base">👤</span> الملف
+        </button>
+    </nav>
+
+    <script>
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`view-${tabName}`).classList.remove('hidden');
+
+            document.querySelectorAll('.nav-btn').forEach(btn => {
+                btn.classList.remove('text-primary');
+                btn.classList.add('text-slate-400');
+            });
+            document.getElementById(`nav-${tabName}`).classList.remove('text-slate-400');
+            document.getElementById(`nav-${tabName}`).classList.add('text-primary');
+        }
+
+        function openUploadModal() { document.getElementById('uploadModal').classList.remove('hidden'); }
+        function closeUploadModal() { document.getElementById('uploadModal').classList.add('hidden'); }
+
+        function submitReceipt() {
+            const fileInput = document.getElementById('receiptFile');
+            if (fileInput.files.length > 0) {
+                alert('تم رفع الإيصال بنجاح وإرساله للشؤون المالية للمراجعة.');
+                closeUploadModal();
+            } else {
+                alert('الرجاء اختيار ملف الإيصال أولاً.');
+            }
+        }
+
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const studentId = document.getElementById('studentId').value;
+            const password = document.getElementById('password').value;
+            const errorElement = document.getElementById('loginError');
+            const loginBtn = document.getElementById('loginBtn');
+
+            loginBtn.innerText = 'جاري الدخول...';
+            errorElement.classList.add('hidden');
+
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ studentId, password })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    localStorage.setItem('token', data.token);
+                    document.getElementById('studentNameDisplay').innerText = `أهلاً، ${data.name}`;
+                    document.getElementById('studentFacultyDisplay').innerText = data.faculty;
+                    document.getElementById('gpaDisplay').innerHTML = `${data.gpa} <span class="text-xs text-success font-normal">ممتاز</span>`;
+                    
+                    document.getElementById('loginSection').classList.add('hidden');
+                    document.getElementById('dashboardSection').classList.remove('hidden');
+                    document.getElementById('bottomNav').classList.remove('hidden');
+                } else {
+                    errorElement.innerText = data.message || 'بيانات الدخول غير صحيحة';
+                    errorElement.classList.remove('hidden');
+                }
+            } catch (err) {
+                errorElement.innerText = 'تعذر الاتصال بالسيرفر، تأكد من تشغيله والمنفذ الصحيح.';
+                errorElement.classList.remove('hidden');
+            } finally {
+                loginBtn.innerText = 'تسجيل الدخول';
+            }
+        });
+
+        function logout() {
+            localStorage.removeItem('token');
+            document.getElementById('dashboardSection').classList.add('hidden');
+            document.getElementById('bottomNav').classList.add('hidden');
+            document.getElementById('loginSection').classList.remove('hidden');
+        }
+
+        function toggleChat() {
+            document.getElementById('chatWindow').classList.toggle('hidden');
+        }
+
+        async function sendChatMessage() {
+            const inputField = document.getElementById('chatInput');
+            const messageContainer = document.getElementById('chatMessages');
+            const userText = inputField.value.trim();
+
+            if (!userText) return;
+
+            messageContainer.innerHTML += `
+                <div class="bg-blue-50 p-2.5 rounded-xl shadow-xs max-w-[85%] text-slate-800 self-end mr-auto">
+                    ${userText}
+                </div>
+            `;
+            inputField.value = '';
+            messageContainer.scrollTop = messageContainer.scrollHeight;
+
+            try {
+                const response = await fetch('/api/chat', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ message: userText })
+                });
+
+                const data = await response.json();
+
+                messageContainer.innerHTML += `
+                    <div class="bg-white p-2.5 rounded-xl shadow-xs max-w-[85%] text-slate-700 border border-slate-100">
+                        ${data.reply}
+                    </div>
+                `;
+                messageContainer.scrollTop = messageContainer.scrollHeight;
+            } catch (err) {
+                messageContainer.innerHTML += `
+                    <div class="bg-red-50 p-2.5 rounded-xl text-red-500 text-[11px]">
+                        عذراً، تعذر الاتصال بالمساعد الذكي.
+                    </div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html> 
